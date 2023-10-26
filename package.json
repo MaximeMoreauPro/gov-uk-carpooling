@@ -1,0 +1,11 @@
+{
+  "name": "gov-uk-carpooling",
+  "version": "1.0.0",
+  "description": "carpooling demo service using GOV.UK Frontend tech stack and the DVLA API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
