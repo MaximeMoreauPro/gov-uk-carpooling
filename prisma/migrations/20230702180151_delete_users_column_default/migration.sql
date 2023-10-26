@@ -1,0 +1,4 @@
+ALTER TABLE public.users ALTER COLUMN "firstName" DROP DEFAULT;
+ALTER TABLE public.users ALTER COLUMN "lastName" DROP DEFAULT;
+ALTER TABLE public.users ALTER COLUMN "email" DROP DEFAULT;
+

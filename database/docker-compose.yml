@@ -1,0 +1,19 @@
+version: '3.5'
+
+services:
+  postgres:
+    container_name: gov-uk-carpooling_postgres-db
+    image: postgres:15.3
+    environment:
+      - PGDATA= /data/postgres
+      - DATABASE_URL=postgres://super_admin:local_development@localhost:5432/gov-uk-carpooling
+      - POSTGRES_USER=super_admin
+      - POSTGRES_PASSWORD=local_development
+    volumes:
+      - postgres-db:/data/gov-uk-carpooling_postgres-db
+    ports:
+      - '5432:5432'
+
+volumes:
+  postgres-db:
+    driver: local

@@ -1,0 +1,42 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id    String @id @default(uuid())
+  email String @unique
+
+  firstName String @map("first_name")
+  lastName  String @map("last_name")
+
+  rides Ride[]
+
+  bookedRides Ride[] @relation("booked_rides")
+
+  @@map("users")
+}
+
+model Ride {
+  id String @id @default(uuid())
+
+  departurePlace   String @map("departure_place")
+  departureTime    String @map("departure_time")
+  destinationPlace String @map("destination_place")
+  destinationTime  String @map("destination_time")
+  postedAt         String @map("posted_at")
+
+  driver   User   @relation(fields: [driverId], references: [id])
+  driverId String @map("driver_id")
+
+  passengers User[] @relation("booked_rides")
+
+  @@map("rides")
+}
