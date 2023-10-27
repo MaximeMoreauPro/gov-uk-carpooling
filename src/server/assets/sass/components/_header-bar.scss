@@ -36,7 +36,7 @@
     border-right: none;
     display: none;
   }
-  @include govuk-media-query($from: desktop ) {
+  @include govuk-media-query($from: desktop) {
     display: inline;
   }
 }

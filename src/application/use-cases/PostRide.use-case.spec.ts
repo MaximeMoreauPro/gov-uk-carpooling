@@ -1,5 +1,8 @@
 import { RideData } from '@/domain/Ride';
-import { GovUK_CarpoolingError, GovUK_CarpoolingErrorCode } from '@/GovUK_CarpoolingError';
+import {
+  GovUK_CarpoolingError,
+  GovUK_CarpoolingErrorCode,
+} from '@/GovUK_CarpoolingError';
 import { StubDateProvider } from '@/infrastructure/DateProvider/DateProvider.stub';
 import { InMemoryRideRepository } from '@/infrastructure/RideRepository/RideRepository.in-memory';
 import { FakeIdProvider } from '@/infrastructure/IdProvider/IdProvider.fake';
@@ -197,8 +200,12 @@ const createFixture = () => {
       expectedErrorMessage: string
     ) {
       expect(thrownError).toBeInstanceOf(GovUK_CarpoolingError);
-      expect((thrownError as GovUK_CarpoolingError).code).toBe(expectedErrorCode);
-      expect((thrownError as GovUK_CarpoolingError).message).toBe(expectedErrorMessage);
+      expect((thrownError as GovUK_CarpoolingError).code).toBe(
+        expectedErrorCode
+      );
+      expect((thrownError as GovUK_CarpoolingError).message).toBe(
+        expectedErrorMessage
+      );
     },
     getIdByIndex(index: number): string {
       return idProvider.getIdByIndex(index);

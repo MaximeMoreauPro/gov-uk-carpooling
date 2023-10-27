@@ -115,7 +115,7 @@ cli
 
           try {
             const rides = await viewUserRidesUseCase.handle(viewUserRidesQuery);
-            const { firstName, lastName} = user;
+            const { firstName, lastName } = user;
             console.log(`The ${firstName} ${lastName}'s rides are:`);
             console.dir(rides);
             process.exit(0);

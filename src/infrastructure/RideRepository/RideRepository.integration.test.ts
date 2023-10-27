@@ -12,7 +12,7 @@ import { InMemoryRideRepository } from './RideRepository.in-memory';
 const RIDE_TEST_FILE = path.join(__dirname, 'rides-test.json');
 
 describe('RideRepository', () => {
-  runRideRepositoryTests( 
+  runRideRepositoryTests(
     'FileSystemRideRepository',
     () => new FileSystemRideRepository(RIDE_TEST_FILE),
     () => {
