@@ -1,0 +1,75 @@
+{% extends "../partials/sharedPageLayout.njk" %}
+
+{% set pageTitle = applicationName + " - Create a User" %}
+
+{% block beforeContent %}
+{% endblock %}
+
+{% block content %}
+
+  <main class="app-container govuk-body">
+    <h1 class="govuk-heading-l">{{ applicationName }}</h1>
+
+    <form method="post">
+
+      <h2 class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1">Create a User</h2>
+
+      {% from "govuk/components/input/macro.njk" import govukInput %}
+
+      {{ govukInput({
+        label: {
+          text: "First name"
+        },
+        errorMessage: {
+          text: "Enter the user first name"
+        } if "firstName" in elementsWithError,
+        id: "firstName",
+        name: "firstName",
+        autocomplete: "given-name",
+        value: data.firstName,
+        attributes: {
+          required: true
+        }
+      }) }}
+
+
+      {{ govukInput({
+        label: {
+          text: "Last name"
+        },
+        errorMessage: {
+          text: "Enter the last name"
+        } if "lastName" in elementsWithError,
+        id: "lastName",
+        name: "lastName",
+        autocomplete: "family-name",
+        value: data.lastName,
+        attributes: {
+          required: true
+        }
+      }) }}
+
+
+      {{ govukInput({
+        label: {
+          text: "Email"
+        },
+        hint: {
+          text: "We’ll only use this as a user unique ID"
+        },
+        id: "email",
+        name: "email",
+        type: "email",
+        autocomplete: "email",
+        spellcheck: false,
+        attributes: {
+          required: true
+        }
+      }) }}
+
+      <button class="govuk-button govuk-!-margin-top-6">Save and continue</button>
+    </form>
+
+  </main>
+
+{% endblock %}

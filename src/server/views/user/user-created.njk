@@ -1,0 +1,16 @@
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - User created" %}
+
+{% block content %}
+
+  <main class="app-container govuk-body">
+    {% from "govuk/components/panel/macro.njk" import govukPanel %}
+
+    {{ govukPanel({
+      titleText: "User created"
+    }) }}
+
+  </main>
+
+{% endblock %}
