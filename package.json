@@ -4,13 +4,17 @@
   "description": "carpooling demo service using GOV.UK Frontend tech stack and the DVLA API",
   "main": "index.js",
   "scripts": {
-    "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
+    "build": "yarn compile-sass && yarn build:tsc && yarn copy-views",
+    "build:tsc": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
+    "copy-views": "cp -R src/server/views dist/server/",
+    "compile-sass": "sass --quiet-deps --no-source-map --load-path=node_modules/govuk-frontend --load-path=node_modules/@ministryofjustice/frontend --load-path=. ./src/server/assets/sass/application.sass:./dist/server/assets/stylesheets/application.css ./src/server/assets/sass/application-ie8.sass:./dist/server/assets/stylesheets/application-ie8.css --style compressed",
     "code:format": "prettier src",
     "code:format-write": "prettier src --write",
     "code:lint": "eslint src --max-warnings 0",
     "code:typing": "tsc --noEmit",
     "test:unit": "jest",
     "test:mutation": "stryker run",
+    "start-server": "node $NODE_OPTIONS dist/server/index.js | bunyan -o short",
     "check-deps-update": "npx --yes npm-check-updates --reject @types/node"
   },
   "bin": {
@@ -28,8 +32,14 @@
     "@babel/preset-typescript": "^7.22.5",
     "@stryker-mutator/core": "^7.1.0",
     "@stryker-mutator/jest-runner": "^7.1.0",
+    "@types/bunyan": "^1.8.10",
+    "@types/bunyan-format": "^0.2.7",
+    "@types/compression": "^1.7.4",
+    "@types/express": "^4.17.20",
     "@types/jest": "^29.5.6",
     "@types/node": "18.16.0",
+    "@types/nunjucks": "^3.2.5",
+    "@types/superagent": "^4.1.20",
     "@types/uuid": "^9.0.2",
     "@typescript-eslint/eslint-plugin": "^6.1.0",
     "@typescript-eslint/parser": "^6.1.0",
@@ -41,6 +51,7 @@
     "prettier": "^2.8.8",
     "prettier-plugin-prisma": "^4.13.0",
     "prisma": "^4.16.1",
+    "sass": "^1.69.5",
     "testcontainers": "^9.12.0",
     "ts-node": "^10.9.1",
     "tsc-alias": "^1.8.8",
@@ -51,7 +62,18 @@
     "yarn": "1.22.19"
   },
   "dependencies": {
+    "@ministryofjustice/frontend": "^1.8.0",
     "@prisma/client": "^4.16.1",
+    "bunyan": "^1.8.15",
+    "bunyan-format": "^0.2.1",
+    "compression": "^1.7.4",
+    "express": "^4.18.2",
+    "govuk-frontend": "^4.7.0",
+    "jquery": "^3.7.1",
+    "nocache": "^4.0.0",
+    "nunjucks": "^3.2.4",
+    "reflect-metadata": "^0.1.13",
+    "superagent": "^8.1.2",
     "uuid": "^9.0.0"
   }
 }
