@@ -21511,12 +21511,10 @@
         }
         _setupDropMarker() {
           const t = this.editor;
-          t.conversion
-            .for('editingDowncast')
-            .markerToHighlight({
-              model: 'drop-target',
-              view: { classes: ['ck-clipboard-drop-target-range'] },
-            }),
+          t.conversion.for('editingDowncast').markerToHighlight({
+            model: 'drop-target',
+            view: { classes: ['ck-clipboard-drop-target-range'] },
+          }),
             t.conversion.for('editingDowncast').markerToElement({
               model: 'drop-target',
               view: (e, { writer: n }) => {
@@ -21771,12 +21769,10 @@
             n
               .for('upcast')
               .elementToElement({ model: 'softBreak', view: 'br' }),
-            n
-              .for('downcast')
-              .elementToElement({
-                model: 'softBreak',
-                view: (t, { writer: e }) => e.createEmptyElement('br'),
-              }),
+            n.for('downcast').elementToElement({
+              model: 'softBreak',
+              view: (t, { writer: e }) => e.createEmptyElement('br'),
+            }),
             i.addObserver(Pu),
             t.commands.add('shiftEnter', new ff(t)),
             this.listenTo(
@@ -22831,12 +22827,10 @@
             n = t.t,
             i = t.conversion;
           e.register('horizontalLine', { inheritAllFrom: '$blockObject' }),
-            i
-              .for('dataDowncast')
-              .elementToElement({
-                model: 'horizontalLine',
-                view: (t, { writer: e }) => e.createEmptyElement('hr'),
-              }),
+            i.for('dataDowncast').elementToElement({
+              model: 'horizontalLine',
+              view: (t, { writer: e }) => e.createEmptyElement('hr'),
+            }),
             i.for('editingDowncast').elementToStructure({
               model: 'horizontalLine',
               view: (t, { writer: e }) => {
