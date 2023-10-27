@@ -17,17 +17,15 @@ export default class UserController {
     createUserUseCase: CreateUserUseCase
   ): Promise<void> {
     const userData: CreateUserCommand = req.body;
-    logger.info('Creating user', userData);
 
     try {
       await createUserUseCase.handle(userData);
       res.render('user/user-created');
     } catch (e) {
       if (e instanceof Error) {
+        logger.error(e);
         res.render('pages/error', {
           message: e.message,
-          stack: e.stack,
-          status: 503,
         });
       }
     }
