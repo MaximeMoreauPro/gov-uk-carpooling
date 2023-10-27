@@ -19,7 +19,17 @@ export default class UserController {
     const userData: CreateUserCommand = req.body;
     logger.info('Creating user', userData);
 
-    await createUserUseCase.handle(userData);
-    res.render('user/user-created');
+    try {
+      await createUserUseCase.handle(userData);
+      res.render('user/user-created');
+    } catch (e) {
+      if (e instanceof Error) {
+        res.render('pages/error', {
+          message: e.message,
+          stack: e.stack,
+          status: 503,
+        });
+      }
+    }
   }
 }
