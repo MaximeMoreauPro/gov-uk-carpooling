@@ -107,9 +107,12 @@ cli
   .addCommand(
     new Command('view-user-rides')
       .description('view user rides')
-      .argument('<user-email>', 'the user email to view the rides of')
-      .action(async userEmail => {
-        const viewUserRidesQuery: ViewUserRidesQuery = { userEmail };
+      .argument(
+        '<user-id-or-email>',
+        'the user id or email to view the rides of'
+      )
+      .action(async userIdOrEmail => {
+        const viewUserRidesQuery: ViewUserRidesQuery = { userIdOrEmail };
 
         try {
           const rides = await viewUserRidesUseCase.handle(viewUserRidesQuery);

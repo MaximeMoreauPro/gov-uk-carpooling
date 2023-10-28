@@ -25,7 +25,7 @@ describe('Feature: view user rides', () => {
       fixture.givenTheseRidesExist([alexRide1, zoeRide, alexRide2, bobRide]);
 
       await fixture.whenViewUserRides({
-        userId: Alex.id,
+        userIdOrEmail: Alex.id,
       });
 
       fixture.thenDisplayedRidesShouldBe([alexRide1, alexRide2]);
@@ -41,7 +41,7 @@ describe('Feature: view user rides', () => {
       fixture.givenTheseRidesExist([alexRide, bobRide]);
 
       await fixture.whenViewUserRides({
-        userId: Zoe.id,
+        userIdOrEmail: Zoe.id,
       });
 
       fixture.thenDisplayedMessageShouldBe(
@@ -62,7 +62,7 @@ describe('Feature: view user rides', () => {
       fixture.givenTheseRidesExist([zoeRide]);
 
       await fixture.whenViewUserRides({
-        userId: Zoe.id,
+        userIdOrEmail: Zoe.id,
       });
 
       fixture.thenDisplayedMessageShouldBe(

@@ -1,8 +1,17 @@
-import { User } from '@/domain/User';
+import { z } from 'zod';
+
 import { IdProvider } from '@/application/providers/IdProvider';
 import { UserRepository } from '@/application/repositories/UserRepository';
 
-export type CreateUserCommand = Omit<User, 'id'>;
+const CreateUserCommandSchema = z
+  .object({
+    firstName: z.string().min(1),
+    lastName: z.string().min(1),
+    email: z.string().email(),
+  })
+  .strict();
+
+export type CreateUserCommand = z.infer<typeof CreateUserCommandSchema>;
 
 export class CreateUserUseCase {
   constructor(
@@ -11,6 +20,8 @@ export class CreateUserUseCase {
   ) {}
 
   async handle(createUserCommand: CreateUserCommand): Promise<void> {
+    CreateUserCommandSchema.parse(createUserCommand);
+
     await this.userRepository.save({
       id: this.idProvider.getId(),
       ...createUserCommand,

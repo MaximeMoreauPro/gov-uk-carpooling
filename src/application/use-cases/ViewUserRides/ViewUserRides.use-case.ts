@@ -1,15 +1,10 @@
 import { RideData } from '@/domain/Ride';
-import { User } from '@/domain/User';
 import { RideRepository } from '@/application/repositories/RideRepository';
 import { UserRepository } from '@/application/repositories/UserRepository';
 
-export type ViewUserRidesQuery =
-  | {
-      userId: User['id'];
-    }
-  | {
-      userEmail: User['email'];
-    };
+export type ViewUserRidesQuery = {
+  userIdOrEmail: string;
+};
 
 export class ViewUserRidesUseCase {
   constructor(
@@ -17,16 +12,13 @@ export class ViewUserRidesUseCase {
     private readonly userRepositoyy: UserRepository
   ) {}
 
-  async handle(
-    viewUserRidesQuery: ViewUserRidesQuery
-  ): Promise<RideData[] | { message: string }> {
+  async handle({
+    userIdOrEmail,
+  }: ViewUserRidesQuery): Promise<RideData[] | { message: string }> {
     try {
-      const user =
-        'userId' in viewUserRidesQuery
-          ? await this.userRepositoyy.getUser(viewUserRidesQuery.userId)
-          : await this.userRepositoyy.getUserByEmail(
-              viewUserRidesQuery.userEmail
-            );
+      const user = userIdOrEmail.includes('@')
+        ? await this.userRepositoyy.getUserByEmail(userIdOrEmail)
+        : await this.userRepositoyy.getUser(userIdOrEmail);
 
       if (user) {
         try {
@@ -51,7 +43,7 @@ export class ViewUserRidesUseCase {
         }
       } else {
         return {
-          message: `The user with ${viewUserRidesQuery} email does not exist!`,
+          message: `The user with ${userIdOrEmail} id/email does not exist!`,
         };
       }
     } catch (e) {

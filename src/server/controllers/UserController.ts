@@ -4,8 +4,8 @@ import {
   CreateUserCommand,
   CreateUserUseCase,
 } from '@/application/use-cases/CreateUser.use-case';
-import logger from '../logger';
 import { ViewUserRidesUseCase } from '@/application/use-cases/ViewUserRides/ViewUserRides.use-case';
+import logger from '../logger';
 
 export default class UserController {
   async displayCreateUserForm(res: Response): Promise<void> {
@@ -39,7 +39,9 @@ export default class UserController {
   ): Promise<void> {
     const { email } = req.params;
     try {
-      const result = await viewUserRidesUseCase.handle({ userEmail: email });
+      const result = await viewUserRidesUseCase.handle({
+        userIdOrEmail: email,
+      });
 
       res.render('pages/error', {
         message: JSON.stringify(result),
