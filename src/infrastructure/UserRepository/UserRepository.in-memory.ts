@@ -18,4 +18,8 @@ export class InMemoryUserRepository implements UserRepository {
     const user = this.users.find(({ email }) => email === userEmail);
     return Promise.resolve(user);
   }
+
+  givenTheseUsersExist(exsitingUsers: User[]): void {
+    this.users = exsitingUsers;
+  }
 }

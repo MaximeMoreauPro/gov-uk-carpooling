@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander';
-import { PrismaClient } from '@prisma/client';
 
 import {
   PostRideCommand,
@@ -12,20 +11,19 @@ import {
   ViewUserRidesQuery,
 } from '@/application/use-cases/ViewUserRides/ViewUserRides.use-case';
 
+import prisma from '@/infrastructure/prisma';
 import { PrismaRideRepository } from '@/infrastructure/RideRepository/RideRepository.prisma';
+import { PrismaUserRepository } from '@/infrastructure/UserRepository/UserRepository.prisma';
 import { RealDateProvider } from '@/infrastructure/DateProvider/DateProvider.real';
 import { UUIDv4IdProvider } from '@/infrastructure/IdProvider/IdProvider.uuidv4';
 import {
   CreateUserCommand,
   CreateUserUseCase,
 } from '@/application/use-cases/CreateUser.use-case';
-import { PrismaUserRepository } from '@/infrastructure/UserRepository/UserRepository.prisma';
 
-const prismaClient = new PrismaClient();
+const userRepository = new PrismaUserRepository(prisma);
 
-const userRepository = new PrismaUserRepository(prismaClient);
-
-const rideRepository = new PrismaRideRepository(prismaClient);
+const rideRepository = new PrismaRideRepository(prisma);
 const dateProvider = new RealDateProvider();
 const idProvider = new UUIDv4IdProvider();
 
@@ -36,7 +34,10 @@ const postRideUseCase = new PostRideUseCase(
   dateProvider,
   idProvider
 );
-const viewUserRidesUseCase = new ViewUserRidesUseCase(rideRepository);
+const viewUserRidesUseCase = new ViewUserRidesUseCase(
+  rideRepository,
+  userRepository
+);
 const cli = new Command();
 
 cli
@@ -108,31 +109,23 @@ cli
       .description('view user rides')
       .argument('<user-email>', 'the user email to view the rides of')
       .action(async userEmail => {
-        const user = await userRepository.getUserByEmail(userEmail);
+        const viewUserRidesQuery: ViewUserRidesQuery = { userEmail };
 
-        if (user) {
-          const viewUserRidesQuery: ViewUserRidesQuery = { user };
-
-          try {
-            const rides = await viewUserRidesUseCase.handle(viewUserRidesQuery);
-            const { firstName, lastName } = user;
-            console.log(`The ${firstName} ${lastName}'s rides are:`);
-            console.dir(rides);
-            process.exit(0);
-          } catch (e) {
-            console.error(e);
-            process.exit(1);
-          }
-        } else {
-          console.error(`The user with ${userEmail} email does not exist!`);
+        try {
+          const rides = await viewUserRidesUseCase.handle(viewUserRidesQuery);
+          console.dir(rides);
+          process.exit(0);
+        } catch (e) {
+          console.error(e);
+          process.exit(1);
         }
       })
   );
 
 async function main() {
-  await prismaClient.$connect();
+  await prisma.$connect();
   await cli.parseAsync();
-  await prismaClient.$disconnect();
+  await prisma.$disconnect();
 }
 
 main();

@@ -3,6 +3,7 @@ import { Router } from 'express';
 import asyncMiddleware from '../middleware/asyncMiddleware';
 import UserController from '../controllers/UserController';
 import { createUserUseCase } from '../use-cases-factories/createUserUseCase';
+import { viewUserRidesUseCase } from '../use-cases-factories/viewUserRidesUseCase';
 
 export default function Index(): Router {
   const router = Router();
@@ -18,6 +19,17 @@ export default function Index(): Router {
     '/user/create',
     asyncMiddleware(async (req, res) => {
       return new UserController().createUser(req, res, createUserUseCase());
+    })
+  );
+
+  router.get(
+    '/user/:email/rides',
+    asyncMiddleware(async (req, res) => {
+      return new UserController().viewUserRides(
+        req,
+        res,
+        viewUserRidesUseCase()
+      );
     })
   );
 

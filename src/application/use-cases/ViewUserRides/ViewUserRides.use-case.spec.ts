@@ -21,10 +21,11 @@ describe('Feature: view user rides', () => {
       const zoeRide = rideBuilder().drivenBy(Zoe).build();
       const bobRide = rideBuilder().drivenBy(Bob).build();
 
+      fixture.givenTheseUsersExist([Alex, Zoe, Bob]);
       fixture.givenTheseRidesExist([alexRide1, zoeRide, alexRide2, bobRide]);
 
       await fixture.whenViewUserRides({
-        user: Alex,
+        userId: Alex.id,
       });
 
       fixture.thenDisplayedRidesShouldBe([alexRide1, alexRide2]);
@@ -36,10 +37,11 @@ describe('Feature: view user rides', () => {
       const alexRide = rideBuilder().drivenBy(Alex).build();
       const bobRide = rideBuilder().drivenBy(Bob).build();
 
+      fixture.givenTheseUsersExist([Alex, Bob, Zoe]);
       fixture.givenTheseRidesExist([alexRide, bobRide]);
 
       await fixture.whenViewUserRides({
-        user: Zoe,
+        userId: Zoe.id,
       });
 
       fixture.thenDisplayedMessageShouldBe(
@@ -56,10 +58,11 @@ describe('Feature: view user rides', () => {
 
       const zoeRide = rideBuilder().drivenBy(Zoe).build();
 
+      fixture.givenTheseUsersExist([Zoe]);
       fixture.givenTheseRidesExist([zoeRide]);
 
       await fixture.whenViewUserRides({
-        user: Zoe,
+        userId: Zoe.id,
       });
 
       fixture.thenDisplayedMessageShouldBe(

@@ -1,5 +1,7 @@
 import { Ride, RideData } from '@/domain/Ride';
+import { User } from '@/domain/User';
 import { InMemoryRideRepository } from '@/infrastructure/RideRepository/RideRepository.in-memory';
+import { InMemoryUserRepository } from '@/infrastructure/UserRepository/UserRepository.in-memory';
 
 import {
   ViewUserRidesUseCase,
@@ -9,19 +11,25 @@ import {
 export type Fixture = ReturnType<typeof createFixture>;
 
 type CreateFixtureParams = {
-  rideRepository: InMemoryRideRepository;
+  rideRepository?: InMemoryRideRepository;
+  userRepository?: InMemoryUserRepository;
 };
 
-export const createFixture = (
-  { rideRepository }: CreateFixtureParams = {
-    rideRepository: new InMemoryRideRepository(),
-  }
-) => {
-  const viewUserRidesUseCase = new ViewUserRidesUseCase(rideRepository);
+export const createFixture = ({
+  rideRepository = new InMemoryRideRepository(),
+  userRepository = new InMemoryUserRepository(),
+}: CreateFixtureParams = {}) => {
+  const viewUserRidesUseCase = new ViewUserRidesUseCase(
+    rideRepository,
+    userRepository
+  );
   let userRides: RideData[];
   let message: string;
 
   return {
+    async givenTheseUsersExist(existingUsers: User[]) {
+      userRepository.givenTheseUsersExist(existingUsers);
+    },
     async givenTheseRidesExist(existingRides: RideData[]) {
       rideRepository.givenTheseRidesExist(existingRides);
     },

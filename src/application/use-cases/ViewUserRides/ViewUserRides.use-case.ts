@@ -1,36 +1,62 @@
 import { RideData } from '@/domain/Ride';
 import { User } from '@/domain/User';
 import { RideRepository } from '@/application/repositories/RideRepository';
+import { UserRepository } from '@/application/repositories/UserRepository';
 
-export type ViewUserRidesQuery = {
-  user: User;
-};
+export type ViewUserRidesQuery =
+  | {
+      userId: User['id'];
+    }
+  | {
+      userEmail: User['email'];
+    };
 
 export class ViewUserRidesUseCase {
-  constructor(private readonly rideRepository: RideRepository) {}
+  constructor(
+    private readonly rideRepository: RideRepository,
+    private readonly userRepositoyy: UserRepository
+  ) {}
 
-  async handle({
-    user,
-  }: ViewUserRidesQuery): Promise<RideData[] | { message: string }> {
+  async handle(
+    viewUserRidesQuery: ViewUserRidesQuery
+  ): Promise<RideData[] | { message: string }> {
     try {
-      const userRides = await this.rideRepository.getRidesPostedByDriver(
-        user.id
-      );
+      const user =
+        'userId' in viewUserRidesQuery
+          ? await this.userRepositoyy.getUser(viewUserRidesQuery.userId)
+          : await this.userRepositoyy.getUserByEmail(
+              viewUserRidesQuery.userEmail
+            );
 
-      if (userRides.length === 0) {
+      if (user) {
+        try {
+          const userRides = await this.rideRepository.getRidesPostedByDriver(
+            user.id
+          );
+
+          if (userRides.length === 0) {
+            return {
+              message: `${user.firstName} ${user.lastName} has no ride`,
+            };
+          }
+
+          const ridesSortedByDepartureTime =
+            this.sortRidesByDepartureTime(userRides);
+
+          return ridesSortedByDepartureTime;
+        } catch (e) {
+          return {
+            message: `${user.firstName} ${user.lastName}'s rides cannot be fetched. Please try later`,
+          };
+        }
+      } else {
         return {
-          message: `${user.firstName} ${user.lastName} has no ride`,
+          message: `The user with ${viewUserRidesQuery} email does not exist!`,
         };
       }
-
-      const ridesSortedByDepartureTime =
-        this.sortRidesByDepartureTime(userRides);
-
-      return Promise.resolve(ridesSortedByDepartureTime);
     } catch (e) {
-      console.error(e);
       return {
-        message: `${user.firstName} ${user.lastName}'s rides cannot be fetched. Please try later`,
+        message: 'User cannot be fetched. Please try later',
       };
     }
   }
