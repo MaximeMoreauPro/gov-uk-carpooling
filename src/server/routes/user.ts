@@ -17,8 +17,13 @@ export default function Index(): Router {
 
   router.post(
     '/user/create',
-    asyncMiddleware(async (req, res) => {
-      return new UserController().createUser(req, res, createUserUseCase());
+    asyncMiddleware(async (req, res, next) => {
+      return new UserController().createUser(
+        req,
+        res,
+        next,
+        createUserUseCase()
+      );
     })
   );
 

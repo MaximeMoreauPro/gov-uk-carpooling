@@ -1,9 +1,8 @@
-import { Request, Response } from 'express';
+import createHttpError from 'http-errors';
+import { NextFunction, Request, Response } from 'express';
+import { ZodError } from 'zod';
 
-import {
-  CreateUserCommand,
-  CreateUserUseCase,
-} from '@/application/use-cases/CreateUser.use-case';
+import { CreateUserUseCase } from '@/application/use-cases/CreateUser.use-case';
 import { ViewUserRidesUseCase } from '@/application/use-cases/ViewUserRides/ViewUserRides.use-case';
 import logger from '../logger';
 
@@ -15,16 +14,19 @@ export default class UserController {
   async createUser(
     req: Request,
     res: Response,
+    next: NextFunction,
     createUserUseCase: CreateUserUseCase
   ): Promise<void> {
-    const userData: CreateUserCommand = req.body;
-
     try {
-      await createUserUseCase.handle(userData);
+      await createUserUseCase.handle(req.body);
       res.render('user/user-created');
     } catch (e) {
       if (e instanceof Error) {
         logger.error(e);
+        if (e instanceof ZodError) {
+          return next(createHttpError(400, e.message));
+        }
+
         res.render('pages/error', {
           message: e.message,
         });
